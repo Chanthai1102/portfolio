@@ -62,13 +62,13 @@ const Hero = () => {
             <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
                 <a
                     href="https://github.com"
-                    className="text-sm bg-white text-black py-2 px-6 rounded-3xl lg:text-lg font-normal hover:bg-gray-100 transition flex justify-between gap-1"
+                    className="text-sm bg-neutral-700 text-white dark:bg-white dark:text-black py-2 px-6 rounded-3xl lg:text-lg font-normal hover:bg-gray-100 transition flex justify-between gap-1"
                 >
                     <IoDocumentTextOutline className="text-lg lg:text-2xl"/>
                     Resume
                 </a>
                 <button
-                    className="text-sm bg-white text-black py-2 px-6 rounded-3xl lg:text-lg font-normal hover:bg-gray-100 transition flex justify-between gap-1">
+                    className="text-sm text-white bg-neutral-700 dark:bg-white dark:text-black py-2 px-6 rounded-3xl lg:text-lg font-normal hover:bg-gray-100 transition flex justify-between gap-1">
                     <BiMessageRoundedDetail className="text-lg lg:text-2xl"/>
                     Contact
                 </button>

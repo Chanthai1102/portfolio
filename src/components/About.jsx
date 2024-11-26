@@ -25,10 +25,11 @@ const About = () => {
                             About me<span className="text-blue-500">.</span>
                         </h2>
                         <p className="w-full text-neutral-900 dark:text-gray-200 md:py-6 text-xl leading-relaxed
-                        tracking-tight text-left md:text-left md:pr-12 font-light">
+                        tracking-tight text-left md:text-left md:pr-12">
                             {ABOUT_TEXT}
                         </p>
-                        <p className={`w-full text-neutral-900 dark:text-gray-200 lg:block text-xl leading-relaxed tracking-tight text-start md:text-left md:pr-12 ${isHidden ? 'hidden' : ''}`}>
+                        <p className={`w-full text-neutral-900 dark:text-gray-200 lg:block text-xl leading-relaxed 
+                        tracking-tight text-start md:text-left md:pr-12 ${isHidden ? 'hidden' : ''}`}>
                             {ABOUT_TEXT_CO}
                         </p>
                         <motion.button
