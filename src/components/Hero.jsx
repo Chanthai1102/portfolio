@@ -21,11 +21,11 @@ const Hero = () => {
                     <h1 className="text-neutral-800 dark:text-white">Experienced</h1> <span className="text-blue-600">full-stack </span><br/>
                 </div>
                 <div className="lg:mb-2">
-                    <span className="text-gray-400">developer with a focus on</span> <br/>
+                    <span className="text-gray-400">Developer Specializing in</span> <br/>
                 </div>
                 <span className="text-blue-600">
                 <ReactTypingEffect
-                    text={["Back-End Developer"]}
+                    text={["Back-End Systems"]}
                     speed={100}
                     eraseSpeed={50}
                 />
