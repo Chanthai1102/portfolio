@@ -22,7 +22,7 @@ const Skill = () => {
                         <motion.div
                             key={hoveredSkill.name}
                             initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-                            animate={{ opacity: 0.15, scale: 1, rotate: 0 }}
+                            animate={{ opacity: 0.6, scale: 1, rotate: 0 }}
                             exit={{ opacity: 0, scale: 0.8, rotate: 10 }}
                             transition={{ duration: 0.5, ease: "easeInOut" }}
                             className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
@@ -30,7 +30,7 @@ const Skill = () => {
                             <motion.img
                                 src={hoveredSkill.icon}
                                 alt={`${hoveredSkill.name} background`}
-                                className="w-[400px] h-[400px] object-contain"
+                                className="w-[200px] sm:w-[280px] md:w-[300px] lg:w-[400px] h-auto object-contain"
                                 animate={{ rotate: [0, 2, -2, 0], scale: [1, 1.05, 1] }}
                                 transition={{
                                     duration: 3,
