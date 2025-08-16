@@ -1,5 +1,6 @@
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { BiMessageRoundedDetail } from "react-icons/bi";
+import { motion } from "framer-motion";
 import ReactTypingEffect from "react-typing-effect";
 import CountUp from 'react-countup';
 const Hero = () => {
@@ -12,13 +13,27 @@ const Hero = () => {
     );
     return (
         <div className="space-y-4 max-w-3xl flex flex-col items-center md:p-4">
-            <button className="px-4 py-2 bg-gray-800 text-gray-300 rounded-full text-sm hover:bg-gray-700 transition">
-                Hello ! ⚡ I'm Chanthai Thy
+            <button
+                className="px-4 py-2 bg-gray-800 text-gray-300 rounded-full text-sm hover:bg-gray-700 transition flex items-center gap-1">
+                Hello !
+                {/* eslint-disable-next-line react/jsx-no-undef */}
+                <motion.span
+                    animate={{rotate: [0, 15, -15, 0], scale: [1, 1.2, 1]}}
+                    transition={{
+                        repeat: Infinity,
+                        duration: 1.5,
+                        ease: "easeInOut"
+                    }}
+                >
+                    ⚡
+                </motion.span>
+                I'm Chanthai Thy
             </button>
             <div
                 className=" text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-snug text-center px-3 md:px-5">
                 <div className="lg:pb-2 flex gap-3 items-center justify-center">
-                    <h1 className="text-neutral-800 dark:text-white">Experienced</h1> <span className="text-blue-600">full-stack </span><br/>
+                    <h1 className="text-neutral-800 dark:text-white">Experienced</h1> <span
+                    className="text-blue-600">full-stack </span><br/>
                 </div>
                 <div className="lg:mb-2">
                     <span className="text-gray-400">Developer Specializing in</span> <br/>
@@ -34,7 +49,8 @@ const Hero = () => {
             <div className="flex flex-col md:flex-row items-center justify-between text-white py-4">
                 <div className="flex items-center justify-between space-y-1 px-2 gap-2">
                 <span className="text-sm md:text-base font-normal bg-neutral-800 py-2 px-2 rounded-xl">
-                    <CountUp start={0} end={daysDifference} duration={2.75} className="text-sm md:text-base lg:text-base"/>
+                    <CountUp start={0} end={daysDifference} duration={2.75}
+                             className="text-sm md:text-base lg:text-base"/>
                 </span>
                     <span className="text-xs md:text-sm text-neutral-900 dark:text-gray-200">Day of experience</span>
                 </div>
@@ -44,7 +60,8 @@ const Hero = () => {
                 <span className="text-sm md:text-base font-normal bg-neutral-800 py-2 px-2 rounded-xl">
                     <CountUp start={0} end={100} duration={2.75} className="text-sm md:text-base lg:text-base"/>K
                 </span>
-                    <span className="text-xs md:text-sm text-neutral-900 dark:text-gray-200">Project of code written</span>
+                    <span
+                        className="text-xs md:text-sm text-neutral-900 dark:text-gray-200">Project of code written</span>
                 </div>
 
                 <div className="w-px h-12 bg-gray-700"></div>
@@ -53,7 +70,8 @@ const Hero = () => {
                 <span className="text-sm md:text-base font-normal bg-neutral-800 py-2 px-2 rounded-xl">
                     <CountUp start={0} end={100} duration={2.75} className="text-base"/>
                 </span>
-                    <span className="text-xs md:text-sm text-neutral-900 dark:text-gray-200">Cups of coffee consumed</span>
+                    <span
+                        className="text-xs md:text-sm text-neutral-900 dark:text-gray-200">Cups of coffee consumed</span>
                 </div>
             </div>
 

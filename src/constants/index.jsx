@@ -17,6 +17,7 @@ import md from '../assets/mongodb.svg'
 import sqlserver from '../assets/sqlserver.svg'
 import hazelcast from '../assets/hazelcast-1.svg'
 import camel from '../assets/camel.svg'
+import eureka from '../assets/spring-cloud.svg'
 
 export const ABOUT_TEXT = 'With over two year of experience in the tech industry. I am an experienced back-end' +
     'developer with a focus on back-end development. My journey has been marked by ' +
@@ -151,5 +152,6 @@ export const DATA_SKILL = [
     { name: "Docker", icon: docker },
     { name: "Mongo DB", icon: md },
     { name: "Hazelcast", icon: hazelcast },
+    {name: "Eureka", icon: eureka}
 ]
 

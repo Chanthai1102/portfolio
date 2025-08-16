@@ -46,8 +46,9 @@ const Skill = () => {
                 <div className="relative z-10 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-9 gap-6">
                     {DATA_SKILL.map((skill, index) => (
                         <motion.div
-                            whileHover={{ scale: 1.2 }}
-                            whileTap={{ scale: 0.8 }}
+                            data-cursor-hover
+                            whileHover={{scale: 1.2}}
+                            whileTap={{scale: 0.8}}
                             key={index}
                             onMouseEnter={() => setHoveredSkill(skill)}
                             onMouseLeave={() => setHoveredSkill(null)}
@@ -62,6 +63,7 @@ const Skill = () => {
                                 {skill.name}
                             </p>
                         </motion.div>
+
                     ))}
                 </div>
             </div>
