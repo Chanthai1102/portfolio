@@ -147,7 +147,6 @@ export const DATA_SKILL = [
     { name: "postman", icon: postman },
     { name: "HTML", icon: html },
     { name: "CSS", icon: css },
-    { name: "NODE JS", icon: node_js},
     { name: "Tailwind CSS", icon: tail_css },
     { name: "Docker", icon: docker },
     { name: "Mongo DB", icon: md },

@@ -7,6 +7,13 @@
 :root{
   font-family: "Inter", sans-serif;
 }
-body{
-  cursor: none;
+body,*{
+  cursor: none !important;
+}
+button,
+a,
+input,
+textarea,
+select {
+  cursor: none !important;
 }
