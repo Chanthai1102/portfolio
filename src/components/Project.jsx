@@ -83,7 +83,6 @@ const Project = () => {
                 >
                     {projects.map((project, index) => (
                         <motion.div
-                            data-cursor-hover
                             key={index}
                             className="group relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl bg-white/10 dark:bg-gray-900/30 backdrop-blur-xl border border-white/20 transition-all duration-300 hover:-translate-y-2"
                             variants={cardVariants}
@@ -106,6 +105,7 @@ const Project = () => {
                                 <div className="mt-4 flex gap-4">
                                     {project.gitlab && (
                                         <a
+                                            data-cursor-hover
                                             href={project.gitlab}
                                             target="_blank"
                                             rel="noopener noreferrer"
@@ -116,6 +116,7 @@ const Project = () => {
                                     )}
                                     {project.demo && (
                                         <a
+                                            data-cursor-hover
                                             href={project.demo}
                                             target="_blank"
                                             rel="noopener noreferrer"

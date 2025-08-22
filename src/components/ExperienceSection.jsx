@@ -130,6 +130,7 @@ const ExperienceSection = () => {
                                         )}
                                     </AnimatePresence>
                                     <motion.button
+                                        data-cursor-hover
                                         key={`toggle-button-${uniqueId}`}
                                         whileHover={{ scale: 1.1 }}
                                         whileTap={{ scale: 0.95 }}
