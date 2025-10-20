@@ -47,7 +47,7 @@ const Hero = () => {
                 >
                     ⚡
                 </motion.span>
-                I'm Chanthai Thy
+                I&apos;m Chanthai Thy
 
                 {/* Glow effect background when hover */}
                 {hovered && (
