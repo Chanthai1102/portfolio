@@ -1,78 +1,76 @@
-import { useEffect, useState, useRef } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue } from "framer-motion";
 
 const CustomCursor = () => {
+    const [isHovering, setIsHovering] = useState(false);
     const mousePos = useRef({ x: -100, y: -100 });
-    const [hoveredElement, setHoveredElement] = useState(null);
+    const dotPos = useRef({ x: -100, y: -100 });
+    const framePos = useRef({ x: -100, y: -100 });
+    const currentSize = useRef({ width: 64, height: 64 });
+    const hoveredElementRef = useRef(null);
+    const isHoveringRef = useRef(false);
 
-    // Base Motion Values
     const containerX = useMotionValue(-100);
     const containerY = useMotionValue(-100);
-    const dotX = useMotionValue(-100);
-    const dotY = useMotionValue(-100);
     const containerWidth = useMotionValue(64);
     const containerHeight = useMotionValue(64);
+    const dotX = useMotionValue(-100);
+    const dotY = useMotionValue(-100);
 
-    // Springs
-    const springConfig = { damping: 30, stiffness: 300, mass: 0.5 };
-    const springContainerX = useSpring(containerX, springConfig);
-    const springContainerY = useSpring(containerY, springConfig);
-    const springDotX = useSpring(dotX, springConfig);
-    const springDotY = useSpring(dotY, springConfig);
-    const springWidth = useSpring(containerWidth, springConfig);
-    const springHeight = useSpring(containerHeight, springConfig);
-
-    // Lerp helper
     const lerp = (a, b, n) => a + (b - a) * n;
+    const dotLerp = 0.38;
+    const frameLerp = 0.3;
+    const sizeLerp = 0.25;
 
     useEffect(() => {
-        const handleMouseMove = (e) => {
+        const handlePointerMove = (e) => {
             mousePos.current = { x: e.clientX, y: e.clientY };
-
-            dotX.set(e.clientX);
-            dotY.set(e.clientY);
-
-            if (!hoveredElement) {
-                containerX.set(e.clientX);
-                containerY.set(e.clientY);
-            }
         };
-        window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
-    }, [hoveredElement, containerX, containerY, dotX, dotY]);
+
+        // Passive pointer events keep scrolling and cursor updates independent.
+        window.addEventListener("pointermove", handlePointerMove, { passive: true });
+        return () => window.removeEventListener("pointermove", handlePointerMove);
+    }, []);
 
     useEffect(() => {
-        let animationFrame;
+        let animationFrame = 0;
 
         const animate = () => {
-            if (hoveredElement) {
+            const hoveredElement = hoveredElementRef.current;
+
+            let frameTargetX = mousePos.current.x;
+            let frameTargetY = mousePos.current.y;
+            let targetWidth = 64;
+            let targetHeight = 64;
+
+            if (hoveredElement && hoveredElement.isConnected) {
                 const rect = hoveredElement.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-
-                // Check if cursor is still inside the element
-                const { x, y } = mousePos.current;
-                const inside =
-                    x >= rect.left &&
-                    x <= rect.right &&
-                    y >= rect.top &&
-                    y <= rect.bottom;
-
-                if (!inside) {
-                    // Force exit hover if cursor left due to animation
-                    setHoveredElement(null);
-                } else {
-                    // Smooth follow element
-                    containerX.set(lerp(containerX.get(), centerX, 0.15));
-                    containerY.set(lerp(containerY.get(), centerY, 0.15));
-                    containerWidth.set(lerp(containerWidth.get(), rect.width, 0.15));
-                    containerHeight.set(lerp(containerHeight.get(), rect.height, 0.15));
-                }
+                frameTargetX = rect.left + rect.width / 2;
+                frameTargetY = rect.top + rect.height / 2;
+                targetWidth = rect.width;
+                targetHeight = rect.height;
             } else {
-                // Smooth reset
-                containerWidth.set(lerp(containerWidth.get(), 64, 0.15));
-                containerHeight.set(lerp(containerHeight.get(), 64, 0.15));
+                hoveredElementRef.current = null;
+                if (isHoveringRef.current) {
+                    isHoveringRef.current = false;
+                    setIsHovering(false);
+                }
             }
+
+            dotPos.current.x = lerp(dotPos.current.x, mousePos.current.x, dotLerp);
+            dotPos.current.y = lerp(dotPos.current.y, mousePos.current.y, dotLerp);
+            framePos.current.x = lerp(framePos.current.x, frameTargetX, frameLerp);
+            framePos.current.y = lerp(framePos.current.y, frameTargetY, frameLerp);
+            currentSize.current.width = lerp(currentSize.current.width, targetWidth, sizeLerp);
+            currentSize.current.height = lerp(currentSize.current.height, targetHeight, sizeLerp);
+
+            dotX.set(dotPos.current.x);
+            dotY.set(dotPos.current.y);
+
+            containerX.set(framePos.current.x);
+            containerY.set(framePos.current.y);
+            containerWidth.set(currentSize.current.width);
+            containerHeight.set(currentSize.current.height);
 
             animationFrame = requestAnimationFrame(animate);
         };
@@ -80,25 +78,46 @@ const CustomCursor = () => {
         animate();
 
         return () => cancelAnimationFrame(animationFrame);
-    }, [hoveredElement, containerX, containerY, containerWidth, containerHeight]);
+    }, [containerHeight, containerWidth, containerX, containerY, dotX, dotY]);
 
-    // Attach hover listeners
     useEffect(() => {
-        const handleMouseEnter = (e) => setHoveredElement(e.currentTarget);
-        const handleMouseLeave = () => setHoveredElement(null);
-        const updateHoverables = () => {
-            document.querySelectorAll("[data-cursor-hover]").forEach((el) => {
-                if (!el.dataset.cursorListenerAttached) {
-                    el.addEventListener("mouseenter", handleMouseEnter);
-                    el.addEventListener("mouseleave", handleMouseLeave);
-                    el.dataset.cursorListenerAttached = "true";
+        const handlePointerOver = (event) => {
+            const target = event.target instanceof Element
+                ? event.target.closest("[data-cursor-hover]")
+                : null;
+
+            if (target) {
+                hoveredElementRef.current = target;
+                if (!isHoveringRef.current) {
+                    isHoveringRef.current = true;
+                    setIsHovering(true);
                 }
-            });
+            }
         };
-        updateHoverables();
-        const observer = new MutationObserver(updateHoverables);
-        observer.observe(document.body, { childList: true, subtree: true });
-        return () => observer.disconnect();
+
+        const handlePointerOut = (event) => {
+            const active = hoveredElementRef.current;
+            if (!active) {
+                return;
+            }
+
+            const relatedTarget = event.relatedTarget;
+            if (!(relatedTarget instanceof Node) || !active.contains(relatedTarget)) {
+                hoveredElementRef.current = null;
+                if (isHoveringRef.current) {
+                    isHoveringRef.current = false;
+                    setIsHovering(false);
+                }
+            }
+        };
+
+        document.addEventListener("pointerover", handlePointerOver);
+        document.addEventListener("pointerout", handlePointerOut);
+
+        return () => {
+            document.removeEventListener("pointerover", handlePointerOver);
+            document.removeEventListener("pointerout", handlePointerOut);
+        };
     }, []);
 
     const rotatorVariants = {
@@ -106,32 +125,30 @@ const CustomCursor = () => {
         hover: { rotate: 0 },
     };
 
-    const isHovering = hoveredElement !== null;
-
     return (
         <div className="pointer-events-none fixed inset-0 z-50">
             {/* Dot */}
             <motion.div
-                className="absolute w-2 h-2 rounded-full bg-black dark:bg-white"
+                className="fixed top-0 left-0 w-2 h-2 rounded-full bg-black dark:bg-white will-change-transform"
                 style={{
-                    top: springDotY,
-                    left: springDotX,
-                    x: "-50%",
-                    y: "-50%",
+                    x: dotX,
+                    y: dotY,
+                    translateX: "-50%",
+                    translateY: "-50%",
                 }}
             />
 
             {/* Container */}
             <motion.div
                 style={{
-                    top: springContainerY,
-                    left: springContainerX,
-                    width: springWidth,
-                    height: springHeight,
-                    x: "-50%",
-                    y: "-50%",
+                    x: containerX,
+                    y: containerY,
+                    width: containerWidth,
+                    height: containerHeight,
+                    translateX: "-50%",
+                    translateY: "-50%",
                 }}
-                className="absolute"
+                className="fixed top-0 left-0 will-change-transform"
             >
                 <motion.div
                     variants={rotatorVariants}
