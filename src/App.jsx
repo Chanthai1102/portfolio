@@ -7,9 +7,13 @@ import { useEffect, useState } from "react";
 import Project from "./components/Project.jsx";
 import CustomCursor from "./components/CustomCursor.jsx";
 
+const CURSOR_CLASS = "custom-cursor-enabled";
+const POINTER_QUERY = "(hover: hover) and (pointer: fine)";
+const MOBILE_OR_TABLET_REGEX = /Android|webOS|iPhone|iPod|iPad|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i;
 
 const App = () => {
     const [theme, setTheme] = useState("dark");
+    const [isDesktopPointer, setIsDesktopPointer] = useState(false);
 
     const changeTheme = () => {
         setTheme(theme === "light" ? "dark" : "light");
@@ -23,6 +27,37 @@ const App = () => {
         }
     }, [theme]);
 
+    useEffect(() => {
+        const mediaQuery = window.matchMedia(POINTER_QUERY);
+
+        const isTouchIpad =
+            /iPad/i.test(window.navigator.userAgent) ||
+            (window.navigator.platform === "MacIntel" && window.navigator.maxTouchPoints > 1);
+
+        const isMobileOrTablet =
+            MOBILE_OR_TABLET_REGEX.test(window.navigator.userAgent) || isTouchIpad;
+
+        const updatePointerMode = (entry) => {
+            const hasFinePointer = entry.matches;
+            setIsDesktopPointer(hasFinePointer && !isMobileOrTablet);
+        };
+
+        updatePointerMode(mediaQuery);
+
+        if (typeof mediaQuery.addEventListener === "function") {
+            mediaQuery.addEventListener("change", updatePointerMode);
+            return () => mediaQuery.removeEventListener("change", updatePointerMode);
+        }
+
+        mediaQuery.addListener(updatePointerMode);
+        return () => mediaQuery.removeListener(updatePointerMode);
+    }, []);
+
+    useEffect(() => {
+        document.documentElement.classList.toggle(CURSOR_CLASS, isDesktopPointer);
+        return () => document.documentElement.classList.remove(CURSOR_CLASS);
+    }, [isDesktopPointer]);
+
     return (
 
         <div
@@ -30,7 +65,7 @@ const App = () => {
                  [background-size:16px_16px] dark:bg-[size:20px_20px] 
                  dark:bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] dark:bg-[#000000]`}
         >
-            <CustomCursor/>
+            {isDesktopPointer && <CustomCursor/>}
             <div
                 className="text-neutral-300 antialiased selection:bg-cyan-300
                    selection:text-cyan-900 flex flex-col items-center justify-center"
