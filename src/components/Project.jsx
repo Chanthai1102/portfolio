@@ -1,6 +1,6 @@
 // Project.jsx
 import ecomerce from '../../public/Images/ecommerce.png'
-import { motion, useMotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import { FaGitlab } from "react-icons/fa";
 import { FiExternalLink } from "react-icons/fi";
 
